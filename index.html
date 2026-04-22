@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CNTRL ROOM — Take Control of Your Sound</title>
+  <meta name="description" content="One-on-one coaching, mixing, mastering, and signature sound design for serious music producers." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Jost:wght@300;400;500;600&family=Jost:ital@1&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:   #080808;
+      --white:   #f2f2f0;
+      --grey:    #9a9a96;
+      --mid:     #1a1a18;
+      --border:  rgba(242,242,240,0.08);
+      --accent:  #c8f542;
+      --font-display: 'Syncopate', sans-serif;
+      --font-body:    'Jost', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-weight: 400;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* ─── Custom cursor ─── */
+    .cursor {
+      position: fixed;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, opacity 0.2s;
+      mix-blend-mode: difference;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(200,245,66,0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.35s cubic-bezier(.25,.46,.45,.94),
+                  height 0.35s cubic-bezier(.25,.46,.45,.94),
+                  left 0.1s, top 0.1s;
+    }
+    body:has(a:hover) .cursor-ring,
+    body:has(button:hover) .cursor-ring {
+      width: 56px; height: 56px;
+    }
+
+    /* ─── Grain overlay ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 9997;
+    }
+
+    /* ─── Nav ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      height: 72px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .nav-cta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      border: none;
+      padding: 0.6rem 1.4rem;
+      cursor: none;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ─── Hero ─── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 6rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        #0d0d0b 0%,
+        #111210 40%,
+        #0a0c09 100%
+      );
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(200,245,66,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,245,66,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 70% 60% at 80% 40%, black 0%, transparent 80%);
+    }
+
+    .hero-orb {
+      position: absolute;
+      right: -10%;
+      top: 10%;
+      width: 55vw;
+      height: 55vw;
+      max-width: 800px;
+      max-height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(200,245,66,0.06) 0%, transparent 65%);
+      animation: orb-drift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes orb-drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(-3%, 5%) scale(1.04); }
+    }
+
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fade-up 0.8s 0.3s forwards;
+    }
+
+    .hero-headline {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 9vw, 9rem);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      max-width: 14ch;
+      opacity: 0;
+      animation: fade-up 0.9s 0.5s forwards;
+    }
+
+    .hero-headline em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero-sub {
+      margin-top: 2rem;
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--grey);
+      max-width: 42ch;
+      line-height: 1.7;
+      opacity: 0;
+      animation: fade-up 0.9s 0.7s forwards;
+    }
+
+    .hero-actions {
+      margin-top: 3rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      opacity: 0;
+      animation: fade-up 0.9s 0.9s forwards;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent);
+      padding: 1rem 2.4rem;
+      text-decoration: none;
+      cursor: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      cursor: none;
+      transition: color 0.25s;
+    }
+    .btn-ghost:hover { color: var(--white); }
+    .btn-ghost svg { transition: transform 0.25s; }
+    .btn-ghost:hover svg { transform: translateX(4px); }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      opacity: 0;
+      animation: fade-up 1s 1.4s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scroll-line 2s ease-in-out infinite;
+    }
+
+    @keyframes scroll-line {
+      0%   { transform: scaleY(0); transform-origin: top; }
+      50%  { transform: scaleY(1); transform-origin: top; }
+      51%  { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Marquee ─── */
+    .marquee-wrap {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      overflow: hidden;
+      background: var(--mid);
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 28s linear infinite;
+    }
+
+    .marquee-track span {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--grey);
+      padding: 0 2.5rem;
+      white-space: nowrap;
+    }
+
+    .marquee-track span.accent { color: var(--accent); }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── Section shared ─── */
+    section {
+      padding: 8rem 3rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.05;
+      text-transform: uppercase;
+      letter-spacing: 0.01em;
+    }
+
+    /* ─── Services ─── */
+    #services {
+      border-top: 1px solid var(--border);
+    }
+
+    .services-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 5rem;
+      align-items: end;
+    }
+
+    .services-desc {
+      font-size: 1rem;
+      color: var(--grey);
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 44ch;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .service-card {
+      background: var(--black);
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: background 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .service-card:hover { background: var(--mid); }
+    .service-card:hover::after { transform: scaleX(1); }
+
+    .service-num {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+    }
+
+    .service-icon {
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      color: var(--grey);
+    }
+
+    .service-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+
+    .service-desc {
+      font-size: 0.9rem;
+      color: var(--grey);
+      font-weight: 300;
+      line-height: 1.75;
+      flex: 1;
+    }
+
+    .service-link {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.25s;
+    }
+    .service-link:hover { gap: 0.9rem; }
+
+    /* ─── Stats strip ─── */
+    .stats-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 4rem 3rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      background: var(--mid);
+    }
+
+    .stat {
+      border-left: 1px solid var(--border);
+      padding-left: 2rem;
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .stat-num span { color: var(--accent); }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--grey);
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      margin-top: 0.5rem;
+    }
+
+    /* ─── Philosophy ─── */
+    #philosophy {
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: center;
+    }
+
+    .philosophy-visual {
+      position: relative;
+      aspect-ratio: 4/5;
+      background: var(--mid);
+      overflow: hidden;
+    }
+
+    .philosophy-visual-inner {
+      position: absolute;
+      inset: 2rem;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .philosophy-word {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(200,245,66,0.25);
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+
+    .philosophy-lines {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .philosophy-accent {
+      position: absolute;
+      bottom: 3rem;
+      left: 3rem;
+      width: 60px;
+      height: 3px;
+      background: var(--accent);
+    }
+
+    .philosophy-content .section-title {
+      margin-bottom: 2rem;
+    }
+
+    .philosophy-body {
+      font-size: 1rem;
+      color: var(--grey);
+      font-weight: 300;
+      line-height: 1.9;
+      margin-bottom: 1.5rem;
+    }
+
+    blockquote {
+      border-left: 2px solid var(--accent);
+      padding-left: 1.5rem;
+      margin: 2.5rem 0;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.65;
+      font-style: italic;
+    }
+
+    /* ─── CTA ─── */
+    #cta {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 10rem 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: clamp(8rem, 22vw, 22rem);
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.025);
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      user-select: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #cta .section-label { justify-content: center; }
+
+    #cta .section-title {
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      margin-bottom: 1.5rem;
+    }
+
+    .cta-sub {
+      font-size: 1rem;
+      color: var(--grey);
+      max-width: 42ch;
+      margin: 0 auto 3.5rem;
+      line-height: 1.8;
+    }
+
+    .cta-email-form {
+      display: flex;
+      max-width: 480px;
+      margin: 0 auto 2rem;
+      border: 1px solid var(--border);
+      background: var(--mid);
+    }
+
+    .cta-email-form input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 1rem 1.5rem;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .cta-email-form input::placeholder { color: var(--grey); }
+
+    .cta-email-form button {
+      background: var(--accent);
+      border: none;
+      padding: 0 1.8rem;
+      font-family: var(--font-body);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--black);
+      cursor: none;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .cta-email-form button:hover { opacity: 0.85; }
+
+    .cta-socials {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+
+    .cta-socials a {
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--grey);
+      text-decoration: none;
+      transition: border-color 0.25s, color 0.25s;
+    }
+    .cta-socials a:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── Footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--mid);
+    }
+
+    .footer-logo {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--grey);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ─── Reveal animation ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(.25,.46,.45,.94),
+                  transform 0.8s cubic-bezier(.25,.46,.45,.94);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      section { padding: 5rem 1.5rem; }
+      #hero { padding: 0 1.5rem 5rem; }
+
+      .services-header { grid-template-columns: 1fr; gap: 2rem; margin-bottom: 3rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: 1fr 1fr; padding: 3rem 1.5rem; }
+      #philosophy { grid-template-columns: 1fr; gap: 3rem; }
+      .philosophy-visual { display: none; }
+
+      footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+      .footer-links { flex-wrap: wrap; justify-content: center; }
+
+      .cursor, .cursor-ring { display: none; }
+      body { cursor: auto; }
+      a, button { cursor: pointer; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursor-ring"></div>
+
+  <!-- ─── Nav ─── -->
+  <nav>
+    <ul class="nav-links">
+      <li><a href="#services">Coaching</a></li>
+      <li><a href="#services">Mixing & Mastering</a></li>
+      <li><a href="#services">Sound Design</a></li>
+    </ul>
+    <a href="#" class="nav-logo">CNTRL ROOM</a>
+    <a href="#cta" class="nav-cta">Book Now</a>
+  </nav>
+
+  <!-- ─── Hero ─── -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-orb"></div>
+
+    <div style="position:relative;z-index:2;">
+      <p class="hero-eyebrow">Professional Music Production</p>
+      <h1 class="hero-headline">
+        Take<br><em>Control</em><br>of Your<br>Sound.
+      </h1>
+      <p class="hero-sub">
+        One-on-one coaching, professional mixing & mastering,
+        and signature sound design for producers who are serious about their craft.
+      </p>
+      <div class="hero-actions">
+        <a href="#services" class="btn-primary">Explore Services</a>
+        <a href="#cta" class="btn-ghost">
+          Book a session
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ─── Marquee ─── -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Coaching</span><span class="accent">✦</span>
+      <span>Mixing</span><span class="accent">✦</span>
+      <span>Mastering</span><span class="accent">✦</span>
+      <span>Sound Design</span><span class="accent">✦</span>
+      <span>Production</span><span class="accent">✦</span>
+      <span>Arrangement</span><span class="accent">✦</span>
+      <span>Artist Development</span><span class="accent">✦</span>
+      <!-- duplicate for seamless loop -->
+      <span>Coaching</span><span class="accent">✦</span>
+      <span>Mixing</span><span class="accent">✦</span>
+      <span>Mastering</span><span class="accent">✦</span>
+      <span>Sound Design</span><span class="accent">✦</span>
+      <span>Production</span><span class="accent">✦</span>
+      <span>Arrangement</span><span class="accent">✦</span>
+      <span>Artist Development</span><span class="accent">✦</span>
+    </div>
+  </div>
+
+  <!-- ─── Services ─── -->
+  <section id="services">
+    <div class="services-header">
+      <div>
+        <p class="section-label reveal">What We Offer</p>
+        <h2 class="section-title reveal reveal-delay-1">Every Tool<br>You Need.</h2>
+      </div>
+      <p class="services-desc reveal reveal-delay-2">
+        Whether you're building a career, leveling up your production,
+        or trying to achieve a specific sound, CNTRL ROOM gives you
+        direct access to the expertise and feedback that moves you forward.
+      </p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-num">01</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3 class="service-name">One-on-One<br>Coaching</h3>
+        <p class="service-desc">
+          Structured sessions tailored to your goals. From arrangement fundamentals
+          to advanced sound design, we work on exactly what you need most.
+        </p>
+        <a href="#cta" class="service-link">
+          Book a session
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="service-card reveal reveal-delay-1">
+        <span class="service-num">02</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+        </div>
+        <h3 class="service-name">Mixing &<br>Mastering</h3>
+        <p class="service-desc">
+          Professional mix and master services that translate across every format
+          and playback system, without losing what makes your track unique.
+        </p>
+        <a href="#cta" class="service-link">
+          Get a quote
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="service-card reveal reveal-delay-2">
+        <span class="service-num">03</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <h3 class="service-name">Signature<br>Sound Design</h3>
+        <p class="service-desc">
+          Build a sonic identity that's entirely your own. Custom presets, patches,
+          and sample design that gives your productions a recognizable voice.
+        </p>
+        <a href="#cta" class="service-link">
+          Learn more
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Stats ─── -->
+  <div class="stats-strip">
+    <div class="stat reveal">
+      <div class="stat-num">500<span>+</span></div>
+      <div class="stat-label">Producers Coached</div>
+    </div>
+    <div class="stat reveal reveal-delay-1">
+      <div class="stat-num">10<span>k+</span></div>
+      <div class="stat-label">Tracks Mixed & Mastered</div>
+    </div>
+    <div class="stat reveal reveal-delay-2">
+      <div class="stat-num">15<span>+</span></div>
+      <div class="stat-label">Years of Experience</div>
+    </div>
+    <div class="stat reveal reveal-delay-3">
+      <div class="stat-num">100<span>%</span></div>
+      <div class="stat-label">Focused on Your Vision</div>
+    </div>
+  </div>
+
+  <!-- ─── Philosophy ─── -->
+  <section id="philosophy">
+    <div class="philosophy-visual reveal">
+      <div class="philosophy-visual-inner">
+        <div class="philosophy-word">CNTRL</div>
+        <div class="philosophy-lines"></div>
+      </div>
+      <div class="philosophy-accent"></div>
+    </div>
+
+    <div class="philosophy-content">
+      <p class="section-label reveal">The Approach</p>
+      <h2 class="section-title reveal reveal-delay-1">Craft Over<br>Templates.</h2>
+
+      <p class="philosophy-body reveal reveal-delay-2">
+        There's no shortcut to sounding like yourself. The producers who break through
+        aren't the ones following tutorials, they're the ones who took the time
+        to understand their tools deeply and built something entirely their own.
+      </p>
+
+      <blockquote class="reveal reveal-delay-2">
+        "The goal isn't to make you sound like someone else. It's to help you
+        sound more like yourself than you ever have."
+      </blockquote>
+
+      <p class="philosophy-body reveal reveal-delay-3">
+        CNTRL ROOM exists for producers who are serious about the craft. Every session
+        is designed around where you are now and where you're trying to go, with
+        no wasted time and no generic advice.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── CTA ─── -->
+  <section id="cta">
+    <div class="cta-bg-text" aria-hidden="true">CNTRL</div>
+    <div style="position:relative;z-index:2;">
+      <p class="section-label reveal">Ready?</p>
+      <h2 class="section-title reveal reveal-delay-1">Let's Build<br>Your Sound.</h2>
+      <p class="cta-sub reveal reveal-delay-2">
+        Drop your email and we'll reach out within 24 hours.
+        No pitch. No pressure. Just a conversation about where you want to go.
+      </p>
+
+      <div class="cta-email-form reveal reveal-delay-3">
+        <input type="email" placeholder="your@email.com" id="email-input" />
+        <button type="button" onclick="handleSubmit()">Get Started</button>
+      </div>
+
+      <p id="form-msg" style="font-size:0.78rem;color:var(--accent);min-height:1.2em;margin-top:0.75rem;"></p>
+
+      <div class="cta-socials reveal">
+        <a href="https://instagram.com" target="_blank" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+          </svg>
+        </a>
+        <a href="https://youtube.com" target="_blank" aria-label="YouTube">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+            <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="https://tiktok.com" target="_blank" aria-label="TikTok">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <a href="#" class="footer-logo">CNTRL ROOM</a>
+    <p class="footer-copy">© 2026 CNTRL ROOM. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#cta">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    // ─── Custom cursor
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+    });
+
+    (function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    })();
+
+    // ─── Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // ─── Email submit
+    function handleSubmit() {
+      const input = document.getElementById('email-input');
+      const msg   = document.getElementById('form-msg');
+      const val   = input.value.trim();
+      if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+        msg.style.color = '#ff6b6b';
+        msg.textContent = 'Please enter a valid email address.';
+        return;
+      }
+      msg.style.color = 'var(--accent)';
+      msg.textContent = "You're in. We'll be in touch within 24 hours.";
+      input.value = '';
+    }
+
+    // ─── Nav active state on scroll
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').style.borderBottomColor =
+        window.scrollY > 40 ? 'rgba(242,242,240,0.1)' : 'var(--border)';
+    });
+  </script>
+</body>
+</html>
