@@ -162,7 +162,7 @@
     <li><a href="#includes">Program</a></li>
     <li><a href="#about">About</a></li>
   </ul>
-  <a href="mailto:john@cntrlroom.io" class="nav-cta">Get in Touch →</a>
+  <button onclick="openForm()" class="nav-cta" style="border:none;cursor:none;">Get in Touch →</button>
 </nav>
 
 <section id="hero">
@@ -176,7 +176,7 @@
     <div class="hero-right">
       <p class="hero-sub">A private mentorship for serious music producers. Better music, faster. A sharper mindset. And the techniques nobody talks about — until now.</p>
       <div class="hero-actions">
-        <a href="mailto:john@cntrlroom.io" class="btn-primary">Get in Touch →</a>
+        <button onclick="openForm()" class="btn-primary" style="border:none;cursor:none;">Get in Touch →</button>
         <a href="#approach" class="btn-ghost">How It Works</a>
       </div>
     </div>
@@ -338,7 +338,7 @@
       <h2 class="sec-h2 rev rev-d1">Every<br>Engagement<br>Is Tailored.</h2>
       <p class="body-text rev rev-d2">CNTRL ROOM is a boutique mentorship — not a course, not a subscription tier, not a package. The scope, structure, and cadence of every engagement is shaped around the individual producer and what they actually need.</p>
       <p class="body-text rev rev-d2">If you're serious about leveling up, reach out directly. We'll have a conversation about where you are, where you want to go, and figure out the best path forward together.</p>
-      <a href="mailto:john@cntrlroom.io?subject=CNTRL ROOM - Interested in Working Together" class="btn-primary rev rev-d3" style="margin-top:2rem;display:inline-flex;">Get a Quote →</a>
+      <button onclick="openForm()" class="btn-primary rev rev-d3" style="margin-top:2rem;display:inline-flex;border:none;cursor:none;">Get a Quote →</button>
     </div>
     <div class="rev rev-d2">
       <div style="border:1px solid var(--rule);padding:2.5rem;">
@@ -679,13 +679,6 @@
   // close on Escape
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeForm();
-  });
-
-  // wire all "Get in Touch / Get a Quote" buttons to open form
-  document.querySelectorAll('a.btn-primary, a.nav-cta, a.cta-link').forEach(el => {
-    if (el.getAttribute('href') === 'mailto:john@cntrlroom.io' || el.classList.contains('cta-link')) {
-      el.addEventListener('click', e => { e.preventDefault(); openForm(); });
-    }
   });
 
   // form submission via Formspree
