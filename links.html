@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CNTRL ROOM — Links</title>
+  <meta name="description" content="John Grand — Music producer, mentor, Label Manager at Splice." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #070707;
+      --white:  #f0ede8;
+      --grey:   #7a7772;
+      --mid:    #111111;
+      --rule:   rgba(240,237,232,0.09);
+      --accent: #e8f542;
+      --font:   'Syne', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* grain */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* cursor */
+    .cur   { position:fixed; width:8px; height:8px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:difference; }
+    .cur-r { position:fixed; width:28px; height:28px; border:1px solid rgba(232,245,66,.3); border-radius:50%; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:width .3s, height .3s; }
+
+    /* background orb */
+    .orb {
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70vw; height: 70vw;
+      max-width: 600px; max-height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(232,245,66,0.055) 0%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+      animation: orb 14s ease-in-out infinite alternate;
+    }
+    @keyframes orb { from { transform:translateX(-50%) scale(1); } to { transform:translateX(-50%) scale(1.08); } }
+
+    /* wrapper */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* avatar */
+    .avatar-wrap {
+      width: 88px; height: 88px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      margin-bottom: 1.4rem;
+      position: relative;
+      opacity: 0;
+      animation: fadeup .7s .1s forwards;
+    }
+    .avatar-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(20%);
+    }
+    .avatar-wrap::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px rgba(232,245,66,.2);
+    }
+
+    /* name */
+    .name {
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--white);
+      opacity: 0;
+      animation: fadeup .7s .2s forwards;
+    }
+
+    .handle {
+      font-size: .65rem;
+      font-weight: 500;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-top: .35rem;
+      opacity: 0;
+      animation: fadeup .7s .3s forwards;
+    }
+
+    .bio {
+      font-size: .8rem;
+      color: var(--grey);
+      line-height: 1.7;
+      text-align: center;
+      max-width: 36ch;
+      margin-top: 1rem;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeup .7s .4s forwards;
+    }
+
+    /* divider */
+    .divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeup .6s .5s forwards;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+    .divider span {
+      font-size: .52rem;
+      font-weight: 700;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--grey);
+      white-space: nowrap;
+    }
+
+    /* link groups */
+    .group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* link item */
+    .link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.4rem;
+      background: var(--mid);
+      border: 1px solid var(--rule);
+      text-decoration: none;
+      color: var(--white);
+      cursor: none;
+      transition: background .2s, border-color .25s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .link-item + .link-item { border-top: none; }
+
+    .link-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform .25s cubic-bezier(.25,.46,.45,.94);
+    }
+
+    .link-item:hover {
+      background: #191919;
+      border-color: rgba(240,237,232,.16);
+      transform: translateX(3px);
+    }
+    .link-item:hover::before { transform: scaleY(1); }
+
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .link-icon {
+      width: 34px; height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--rule);
+      color: var(--accent);
+      flex-shrink: 0;
+      font-size: .9rem;
+      transition: border-color .2s;
+    }
+    .link-item:hover .link-icon { border-color: rgba(232,245,66,.35); }
+
+    .link-label {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .link-sub {
+      font-size: .68rem;
+      font-weight: 400;
+      color: var(--grey);
+      margin-top: .15rem;
+      letter-spacing: .02em;
+    }
+
+    .link-arrow {
+      font-size: .7rem;
+      color: var(--grey);
+      transition: color .2s, transform .2s;
+      flex-shrink: 0;
+    }
+    .link-item:hover .link-arrow { color: var(--accent); transform: translateX(3px); }
+
+    /* featured link */
+    .link-item.featured {
+      background: rgba(232,245,66,.07);
+      border-color: rgba(232,245,66,.2);
+    }
+    .link-item.featured .link-label { color: var(--accent); }
+    .link-item.featured:hover { background: rgba(232,245,66,.12); }
+
+    /* footer */
+    .page-footer {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .6rem;
+      opacity: 0;
+      animation: fadeup .7s 1.2s forwards;
+    }
+
+    .page-footer a {
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .page-footer a:hover { color: var(--white); }
+
+    .page-footer-rule {
+      width: 30px;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    .page-footer-copy {
+      font-size: .58rem;
+      color: rgba(240,237,232,.2);
+      letter-spacing: .12em;
+    }
+
+    /* staggered reveal for groups */
+    .group { opacity: 0; animation: fadeup .7s forwards; }
+    .group:nth-child(1) { animation-delay: .55s; }
+    .group:nth-child(2) { animation-delay: .7s; }
+    .group:nth-child(3) { animation-delay: .85s; }
+    .group:nth-child(4) { animation-delay: 1s; }
+
+    .divider:nth-of-type(1) { animation-delay: .5s; }
+    .divider:nth-of-type(2) { animation-delay: .65s; }
+    .divider:nth-of-type(3) { animation-delay: .8s; }
+    .divider:nth-of-type(4) { animation-delay: .95s; }
+
+    @keyframes fadeup {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    @media(max-width:600px) {
+      body { padding: 2rem 1rem 4rem; }
+      .cur, .cur-r { display: none; }
+      body { cursor: auto; }
+      a { cursor: pointer; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="cur-r"></div>
+<div class="orb"></div>
+
+<div class="wrap">
+
+  <!-- AVATAR -->
+  <div class="avatar-wrap">
+    <img src="/John%20Grand%20-%20Press%20Pic%201.jpg" alt="John Grand" />
+  </div>
+
+  <p class="name">John Grand</p>
+  <p class="handle">CNTRL ROOM</p>
+  <p class="bio">Music producer, mentor &amp; Label Manager at Splice. Progressive house &amp; trance as John Grand. Releases on Enhanced, Armada, FSOE &amp; more.</p>
+
+  <!-- MENTORSHIP -->
+  <div class="divider"><span>Mentorship</span></div>
+  <div class="group">
+    <a href="https://www.cntrlroom.io" class="link-item featured" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div>
+          <p class="link-label">CNTRL ROOM</p>
+          <p class="link-sub">Music Production Coaching &amp; Mentoring</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="mailto:john@cntrlroom.io" class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div>
+          <p class="link-label">Contact / Booking / Coaching</p>
+          <p class="link-sub">Get in touch to work together</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="divider"><span>Tools &amp; Resources</span></div>
+  <div class="group">
+    <a href="https://johngrandofficial.com/racks/john-grands-ableton-hi..." class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div>
+          <p class="link-label">Ableton Racks</p>
+          <p class="link-sub">John Grand's Ableton production racks</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- MIXES & PERFORMANCES -->
+  <div class="divider"><span>Mixes &amp; Performances</span></div>
+  <div class="group">
+    <a href="https://www.youtube.com/watch?v=Fw6905IfT6k" class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div>
+          <p class="link-label">A State of Trance — Episode 1255</p>
+          <p class="link-sub">John Grand Guest Mix</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="https://soundcloud.com/johngrandmusic/john-grand-avalon-hollywood-ca" class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225c-.015 0-.023.01-.023.025l-.323 2.054.323 2.047c0 .015.008.025.023.025.014 0 .023-.01.023-.025l.366-2.047-.366-2.054c0-.015-.009-.025-.023-.025zm.677-.28c-.02 0-.032.013-.032.03l-.276 2.33.276 2.325c0 .019.012.03.032.03.019 0 .031-.011.031-.03l.314-2.325-.314-2.33c0-.017-.012-.03-.031-.03zm.687-.096c-.024 0-.04.016-.04.038l-.23 2.425.23 2.42c0 .022.016.038.04.038.023 0 .04-.016.04-.038l.26-2.42-.26-2.425c0-.022-.017-.038-.04-.038zm.694-.057c-.028 0-.049.02-.049.046l-.183 2.482.183 2.477c0 .026.021.046.049.046.027 0 .048-.02.048-.046l.207-2.477-.207-2.482c0-.026-.021-.046-.048-.046zm.703.03c-.032 0-.057.024-.057.054l-.136 2.453.136 2.45c0 .03.025.054.057.054.03 0 .055-.024.055-.054l.155-2.45-.155-2.453c0-.03-.025-.054-.055-.054zm.71.124c-.036 0-.064.027-.064.062l-.089 2.328.089 2.325c0 .035.028.062.064.062.035 0 .063-.027.063-.062l.1-2.325-.1-2.328c0-.035-.028-.062-.063-.062zm.717.19c-.04 0-.072.031-.072.07l-.042 2.138.042 2.135c0 .039.032.07.072.07.039 0 .07-.031.07-.07l.048-2.135-.048-2.138c0-.039-.031-.07-.07-.07zm.722.262c-.044 0-.08.035-.08.078l.005 1.876-.005 1.874c0 .043.036.078.08.078.043 0 .078-.035.078-.078l.006-1.874-.006-1.876c0-.043-.035-.078-.078-.078zM24 11.174c0-1.764-1.428-3.192-3.192-3.192-.525 0-1.02.132-1.452.364C19.126 5.49 16.65 3 13.576 3c-.808 0-1.584.168-2.268.468-.261.108-.33.22-.332.315v15.852c.002.1.07.183.168.198H20.81C22.57 19.833 24 18.403 24 16.643c0-1.056-.51-1.993-1.293-2.587.17-.406.293-.843.293-1.882z"/></svg>
+        </div>
+        <div>
+          <p class="link-label">Avalon Hollywood — Live Set</p>
+          <p class="link-sub">John Grand live, Hollywood CA — 3-14-2026</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="https://www.youtube.com/watch?v=Wp9sMN-8QsY&t=552s" class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div>
+          <p class="link-label">Enhanced Sessions 837</p>
+          <p class="link-sub">John Grand Guest Mix</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- FOLLOW & SUPPORT -->
+  <div class="divider"><span>Follow &amp; Support</span></div>
+  <div class="group">
+    <a href="https://youtube.com/@johngrandofficial" class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </div>
+        <div>
+          <p class="link-label">YouTube</p>
+          <p class="link-sub">Production tips &amp; tutorials — @johngrandofficial</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+    <a href="https://buymeacoffee.com/johngrand" class="link-item" target="_blank" rel="noopener">
+      <div class="link-left">
+        <div class="link-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+        </div>
+        <div>
+          <p class="link-label">Buy Me a Coffee</p>
+          <p class="link-sub">Support the music &amp; content</p>
+        </div>
+      </div>
+      <span class="link-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    <a href="https://www.cntrlroom.io" target="_blank">cntrlroom.io</a>
+    <div class="page-footer-rule"></div>
+    <p class="page-footer-copy">© 2026 CNTRL ROOM</p>
+  </div>
+
+</div>
+
+<script>
+  const cur=document.getElementById('cur'),curR=document.getElementById('cur-r');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+  (function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+</script>
+</body>
+</html>
