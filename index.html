@@ -85,33 +85,8 @@
     .inc-list li{font-size:.8rem;color:rgba(240,237,232,.55);line-height:1.6;padding-left:1.1rem;position:relative}
     .inc-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.68rem}
 
-    /* PRICING */
-    #pricing{border-top:1px solid var(--rule);background:var(--mid)}
-    .pricing-hd{margin-bottom:3rem}
-    .pricing-sub{font-size:.88rem;color:rgba(240,237,232,.52);line-height:1.8;max-width:56ch;margin-top:.8rem}
-    .p-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule)}
-    .p-card{background:var(--mid);display:flex;flex-direction:column;position:relative;transition:background .3s}
-    .p-card:hover{background:#1a1a1a}
-    .p-card.featured{background:#141414}
-    .p-card.featured::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent)}
-    .p-top{padding:1.6rem 1.5rem 1.2rem;border-bottom:1px solid var(--rule)}
-    .p-badge{font-size:.53rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--accent);margin-bottom:.7rem}
-    .p-hrs{font-size:2.4rem;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--white)}
-    .p-hrs span{font-size:.9rem;color:var(--grey);font-weight:500}
-    .p-sessions{font-size:.68rem;color:var(--grey);margin-top:.3rem}
-    .p-price{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--white);margin-top:1rem}
-    .p-price sub{font-size:.78rem;font-weight:500;color:var(--grey)}
-    .p-rate{font-size:.65rem;color:rgba(240,237,232,.4);margin-top:.2rem}
-    .p-body{padding:1.3rem 1.5rem;flex:1}
-    .p-feats{list-style:none;display:flex;flex-direction:column;gap:.48rem}
-    .p-feats li{font-size:.77rem;color:rgba(240,237,232,.55);line-height:1.55;padding-left:1.1rem;position:relative}
-    .p-feats li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.67rem}
-    .p-feats li strong{color:rgba(240,237,232,.85);font-weight:600}
-    .p-foot{padding:1.3rem 1.5rem;border-top:1px solid var(--rule)}
-    .btn-book{display:flex;align-items:center;justify-content:space-between;width:100%;font-family:var(--font);font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--black);background:var(--accent);border:none;padding:.85rem 1.1rem;cursor:none;text-decoration:none;transition:opacity .2s}
-    .btn-book:hover{opacity:.88}
-    .btn-book-ghost{display:flex;align-items:center;justify-content:space-between;width:100%;font-family:var(--font);font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--white);background:transparent;border:1px solid var(--rule);padding:.85rem 1.1rem;cursor:none;text-decoration:none;transition:border-color .2s}
-    .btn-book-ghost:hover{border-color:rgba(240,237,232,.3)}
+    /* QUOTE responsive */
+    @media(max-width:900px){#quote>div{grid-template-columns:1fr!important;gap:2.5rem!important}}
 
     /* WHO */
     #who{border-top:1px solid var(--rule)}
@@ -156,7 +131,6 @@
     .rev-d1{transition-delay:.1s}.rev-d2{transition-delay:.2s}.rev-d3{transition-delay:.3s}.rev-d4{transition-delay:.4s}
 
     /* RESPONSIVE */
-    @media(max-width:1100px){.p-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:900px){
       nav{padding:0 1.5rem}.nav-links{display:none}
       section{padding:4rem 1.5rem}
@@ -165,7 +139,7 @@
       .about-photo{display:none}
       .includes-header{grid-template-columns:1fr;gap:1.5rem}
       .inc-grid{grid-template-columns:1fr}
-      .p-grid{grid-template-columns:1fr}
+      #quote>div{grid-template-columns:1fr!important;gap:2.5rem!important}
       .who-grid{grid-template-columns:1fr}
       .worked-inner{grid-template-columns:1fr;gap:2rem}
       .worked-list{grid-template-columns:1fr}
@@ -184,8 +158,8 @@
 <nav>
   <a href="#" class="nav-logo">CNTRL ROOM</a>
   <ul class="nav-links">
+    <li><a href="#approach">Approach</a></li>
     <li><a href="#includes">Program</a></li>
-    <li><a href="#pricing">Pricing</a></li>
     <li><a href="#about">About</a></li>
   </ul>
   <a href="mailto:john@cntrlroom.io" class="nav-cta">Get in Touch →</a>
@@ -200,10 +174,10 @@
       <h1 class="hero-h1"><span class="acc">Finish</span><br>More.<br>Sound<br>Better.<br>Get<br>Signed.</h1>
     </div>
     <div class="hero-right">
-      <p class="hero-sub">A serious mentorship for music producers who want to finish more tracks, at a higher quality, in less time — and build a real career in electronic music.</p>
+      <p class="hero-sub">A private mentorship for serious music producers. Better music, faster. A sharper mindset. And the techniques nobody talks about — until now.</p>
       <div class="hero-actions">
         <a href="mailto:john@cntrlroom.io" class="btn-primary">Get in Touch →</a>
-        <a href="#pricing" class="btn-ghost">See Pricing</a>
+        <a href="#approach" class="btn-ghost">How It Works</a>
       </div>
     </div>
   </div>
@@ -222,10 +196,10 @@
     </div>
   </div>
   <div class="overview-right rev rev-d2">
-    <p class="body-text">Most coaching stops at technique. CNTRL ROOM goes further.</p>
-    <p class="body-text">Through hands-on sessions, proven workflows, and ongoing feedback, you'll learn not just how to <strong>create better music</strong>, but how to <strong>position it strategically</strong>: pitching to labels, building A&R relationships, and developing the habits that separate producers who break through from those who stay stuck.</p>
-    <p class="body-text">This is a <strong>partnership</strong>, not a class. Every session is built around your projects, your goals, and the specific gaps holding you back right now.</p>
-    <p class="body-text"><strong>Plans start at $450/month.</strong> Limited spots available.</p>
+    <p class="body-text">Most coaching stops at technique. CNTRL ROOM goes deeper.</p>
+    <p class="body-text">This is a private mentorship built around the belief that the biggest thing holding most producers back isn't skill — it's <strong>mindset, habit, and workflow</strong>. We work on all three. Through hands-on sessions and ongoing feedback, you'll develop the frameworks that lead to better music, faster turnaround times, and more genuine moments of creative inspiration.</p>
+    <p class="body-text">Every session is built around <strong>you</strong> — your current projects, your specific blockers, and the gaps between where you are and where you want to be. This is not a template. It's a partnership.</p>
+    <p class="body-text"><strong>Reach out to discuss working together.</strong> Every engagement is tailored — pricing is determined based on your goals and what you need.</p>
   </div>
 </section>
 
@@ -257,7 +231,7 @@
       <p class="sec-tag rev">What You Get</p>
       <h2 class="sec-h2 rev rev-d1">Every<br>Session<br>Counts.</h2>
     </div>
-    <p class="includes-intro rev rev-d2">No generic advice. No pre-recorded modules. Every session is built around your current work, your goals, and the specific gaps holding you back. Choose the plan that fits where you are right now.</p>
+    <p class="includes-intro rev rev-d2">No generic advice. No pre-recorded modules. Every session is built around your current work, your creative blockers, and the techniques that will move the needle for you specifically.</p>
   </div>
   <div class="inc-grid">
     <div class="inc-card rev">
@@ -303,95 +277,95 @@
   </div>
 </section>
 
-<section id="pricing">
-  <div class="pricing-hd">
-    <p class="sec-tag rev">Investment</p>
-    <h2 class="sec-h2 rev rev-d1">Choose<br>Your Plan.</h2>
-    <p class="pricing-sub rev rev-d2">The more hours you commit to, the better the per-session rate. The full program unlocks everything — sessions, unlimited feedback, monthly resources, and label strategy.</p>
+<section id="approach" style="border-top:1px solid var(--rule);">
+  <div class="includes-header">
+    <div>
+      <p class="sec-tag rev">The Approach</p>
+      <h2 class="sec-h2 rev rev-d1">Reframe<br>Everything.</h2>
+    </div>
+    <p class="includes-intro rev rev-d2">
+      CNTRL ROOM coaching is built on one core idea: the blockers that stifle your creativity are almost never technical. They're mental. We work on both — and the results compound.
+    </p>
   </div>
-  <div class="p-grid rev rev-d2">
-    <div class="p-card">
-      <div class="p-top">
-        <p class="p-badge">Starter</p>
-        <div class="p-hrs">2 <span>hrs/mo</span></div>
-        <p class="p-sessions">1 × 2-hour session</p>
-        <div class="p-price">$450 <sub>/mo</sub></div>
-        <p class="p-rate">$225/hr effective rate</p>
-      </div>
-      <div class="p-body">
-        <ul class="p-feats">
-          <li><strong>1 × 2-hour</strong> 1:1 session per month</li>
-          <li>Session recording provided</li>
-          <li>Direct message access between sessions</li>
-          <li>Focused on one area: production, mix, or strategy</li>
-        </ul>
-      </div>
-      <div class="p-foot">
-        <a href="mailto:john@cntrlroom.io?subject=CNTRL ROOM - Starter Plan (2hrs)" class="btn-book-ghost"><span>Get Started</span><span>→</span></a>
-      </div>
+  <div class="inc-grid">
+    <div class="inc-card rev">
+      <p class="inc-num">01</p>
+      <h3 class="inc-title">Mindset First</h3>
+      <ul class="inc-list">
+        <li>Identify and break the creative patterns that keep you stuck in loops</li>
+        <li>Reframe how you think about finishing, quality, and perfectionism</li>
+        <li>Build the mental habits that sustain output long after the sessions end</li>
+        <li>Develop confidence in your decision-making inside the DAW</li>
+      </ul>
     </div>
-    <div class="p-card">
-      <div class="p-top">
-        <p class="p-badge">Standard</p>
-        <div class="p-hrs">4 <span>hrs/mo</span></div>
-        <p class="p-sessions">2 × 2-hour sessions</p>
-        <div class="p-price">$850 <sub>/mo</sub></div>
-        <p class="p-rate">$212/hr effective rate</p>
-      </div>
-      <div class="p-body">
-        <ul class="p-feats">
-          <li><strong>2 × 2-hour</strong> 1:1 sessions per month</li>
-          <li>Session recordings provided</li>
-          <li>Track feedback between sessions</li>
-          <li>Covers production, mix, and career direction</li>
-        </ul>
-      </div>
-      <div class="p-foot">
-        <a href="mailto:john@cntrlroom.io?subject=CNTRL ROOM - Standard Plan (4hrs)" class="btn-book-ghost"><span>Get Started</span><span>→</span></a>
-      </div>
+    <div class="inc-card rev rev-d1">
+      <p class="inc-num">02</p>
+      <h3 class="inc-title">Proven Workflows</h3>
+      <ul class="inc-list">
+        <li>Time-tested production strategies that lead to better results, faster</li>
+        <li>Frameworks for finishing tracks without sacrificing quality or feel</li>
+        <li>Arrangement, sound design, and mixing techniques refined over 20+ years</li>
+        <li>Ableton templates, MIDI files, and presets from my actual workflow</li>
+      </ul>
     </div>
-    <div class="p-card">
-      <div class="p-top">
-        <p class="p-badge">Advanced</p>
-        <div class="p-hrs">6 <span>hrs/mo</span></div>
-        <p class="p-sessions">3 × 2-hour sessions</p>
-        <div class="p-price">$1,200 <sub>/mo</sub></div>
-        <p class="p-rate">$200/hr effective rate</p>
-      </div>
-      <div class="p-body">
-        <ul class="p-feats">
-          <li><strong>3 × 2-hour</strong> 1:1 sessions per month</li>
-          <li>Session recordings provided</li>
-          <li>Unlimited track feedback between sessions</li>
-          <li>Monthly curated resources (presets, samples, MIDI)</li>
-          <li>Label pitching guidance</li>
-        </ul>
-      </div>
-      <div class="p-foot">
-        <a href="mailto:john@cntrlroom.io?subject=CNTRL ROOM - Advanced Plan (6hrs)" class="btn-book-ghost"><span>Get Started</span><span>→</span></a>
-      </div>
+    <div class="inc-card rev rev-d2">
+      <p class="inc-num">03</p>
+      <h3 class="inc-title">Moments of Inspiration</h3>
+      <ul class="inc-list">
+        <li>Learn how to engineer creative flow states, not just wait for them</li>
+        <li>Techniques for getting more out of every session in the studio</li>
+        <li>How to turn fragments and ideas into fully realised, polished tracks</li>
+        <li>The secret methods that separate producers who thrive from those who stall</li>
+      </ul>
     </div>
-    <div class="p-card featured">
-      <div class="p-top">
-        <p class="p-badge">Full Program — Best Value</p>
-        <div class="p-hrs">8 <span>hrs/mo</span></div>
-        <p class="p-sessions">4 × 2-hour sessions</p>
-        <div class="p-price">$1,500 <sub>/mo</sub></div>
-        <p class="p-rate">$187/hr effective rate</p>
-      </div>
-      <div class="p-body">
-        <ul class="p-feats">
-          <li><strong>4 × 2-hour</strong> 1:1 sessions per month</li>
-          <li>Session recordings provided</li>
-          <li><strong>Unlimited</strong> track feedback between sessions</li>
-          <li><strong>Monthly resources</strong>: presets, samples, MIDI, Ableton templates</li>
-          <li>Comprehensive PDF workflow and technique guide</li>
-          <li>Label pitching strategy + A&R relationship building</li>
-          <li>Personalized monthly action plan</li>
-        </ul>
-      </div>
-      <div class="p-foot">
-        <a href="mailto:john@cntrlroom.io?subject=CNTRL ROOM - Full Program (8hrs)" class="btn-book"><span>Get Started</span><span>→</span></a>
+    <div class="inc-card rev rev-d3">
+      <p class="inc-num">04</p>
+      <h3 class="inc-title">Industry Strategy</h3>
+      <ul class="inc-list">
+        <li>How to position your music and pitch demos that actually get heard</li>
+        <li>Build real A&R relationships — not cold submissions into a void</li>
+        <li>Insights from both sides: signed artist and industry label insider</li>
+        <li>A long-term career strategy built around your sound and your goals</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="quote" style="border-top:1px solid var(--rule);background:var(--mid);">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7rem;align-items:center;">
+    <div>
+      <p class="sec-tag rev">Working Together</p>
+      <h2 class="sec-h2 rev rev-d1">Every<br>Engagement<br>Is Tailored.</h2>
+      <p class="body-text rev rev-d2">CNTRL ROOM is a boutique mentorship — not a course, not a subscription tier, not a package. The scope, structure, and cadence of every engagement is shaped around the individual producer and what they actually need.</p>
+      <p class="body-text rev rev-d2">If you're serious about leveling up, reach out directly. We'll have a conversation about where you are, where you want to go, and figure out the best path forward together.</p>
+      <a href="mailto:john@cntrlroom.io?subject=CNTRL ROOM - Interested in Working Together" class="btn-primary rev rev-d3" style="margin-top:2rem;display:inline-flex;">Get a Quote →</a>
+    </div>
+    <div class="rev rev-d2">
+      <div style="border:1px solid var(--rule);padding:2.5rem;">
+        <p style="font-size:.58rem;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);margin-bottom:1.8rem;">What to expect</p>
+        <div style="display:flex;flex-direction:column;gap:1.4rem;">
+          <div style="display:flex;gap:1.2rem;align-items:flex-start;">
+            <span style="color:var(--accent);font-size:.8rem;margin-top:.1rem;flex-shrink:0;">→</span>
+            <div>
+              <p style="font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;">A real conversation</p>
+              <p style="font-size:.78rem;color:rgba(240,237,232,.5);line-height:1.65;">No pitch decks. Just an honest conversation about your music and your goals.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:1.2rem;align-items:flex-start;">
+            <span style="color:var(--accent);font-size:.8rem;margin-top:.1rem;flex-shrink:0;">→</span>
+            <div>
+              <p style="font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;">A tailored proposal</p>
+              <p style="font-size:.78rem;color:rgba(240,237,232,.5);line-height:1.65;">Scope and pricing shaped entirely around what you need — nothing more, nothing less.</p>
+            </div>
+          </div>
+          <div style="display:flex;gap:1.2rem;align-items:flex-start;">
+            <span style="color:var(--accent);font-size:.8rem;margin-top:.1rem;flex-shrink:0;">→</span>
+            <div>
+              <p style="font-size:.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;">Limited availability</p>
+              <p style="font-size:.78rem;color:rgba(240,237,232,.5);line-height:1.65;">CNTRL ROOM takes on a small number of clients at a time to keep the quality of attention high.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -457,8 +431,8 @@
   <a href="#" class="foot-logo">CNTRL ROOM</a>
   <p class="foot-copy">© 2026 CNTRL ROOM — Mentorship with John Grand</p>
   <ul class="foot-links">
-    <li><a href="https://www.instagram.com/johngrandofficial/" target="_blank">Instagram</a></li>
-    <li><a href="https://www.youtube.com/@JohnGrandOfficial" target="_blank">YouTube</a></li>
+    <li><a href="https://instagram.com" target="_blank">Instagram</a></li>
+    <li><a href="https://youtube.com" target="_blank">YouTube</a></li>
     <li><a href="mailto:john@cntrlroom.io">Contact</a></li>
   </ul>
 </footer>
