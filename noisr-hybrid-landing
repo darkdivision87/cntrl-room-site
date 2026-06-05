@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOISR — Hybrid | Dark Electronic Presets for Serum 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Sora:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050507;
+    --bg-2:#0b0b10;
+    --panel:#0e0e14;
+    --ink:#f4f3f7;
+    --muted:#8b8a96;
+    --line:rgba(255,255,255,0.08);
+    --accent:#c9402f;        /* ember red */
+    --accent-2:#ff6a3d;      /* warm flare */
+    --glow:rgba(201,64,47,0.45);
+    --display:'Archivo', sans-serif;
+    --body:'Sora', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--body);
+    font-weight:300;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--accent);color:#fff}
+
+  /* ---------- grain overlay ---------- */
+  body::after{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    opacity:0.04;
+    z-index:9999;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+  /* ---------- nav ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 32px;
+    backdrop-filter:blur(14px);
+    background:linear-gradient(180deg,rgba(5,5,7,0.85),rgba(5,5,7,0));
+    transition:background .3s ease;
+  }
+  nav.solid{background:rgba(5,5,7,0.92);border-bottom:1px solid var(--line)}
+  .logo img{height:18px;display:block}
+  .navlinks{display:flex;gap:34px;align-items:center}
+  .navlinks a{
+    color:var(--muted);text-decoration:none;font-size:13px;
+    letter-spacing:.06em;text-transform:uppercase;transition:color .2s
+  }
+  .navlinks a:hover{color:var(--ink)}
+  .nav-cta{
+    background:var(--ink);color:var(--bg)!important;
+    padding:10px 20px;border-radius:2px;font-weight:500;
+  }
+  .nav-cta:hover{background:var(--accent);color:#fff!important}
+  @media(max-width:760px){.navlinks a:not(.nav-cta){display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;align-items:center;
+    overflow:hidden;
+    background:radial-gradient(120% 90% at 70% 10%, #1a0d0a 0%, #0a0608 45%, #050507 100%);
+  }
+  .hero-orb{
+    position:absolute;
+    width:900px;height:900px;border-radius:50%;
+    top:-220px;right:-220px;
+    background:radial-gradient(circle,var(--glow) 0%,rgba(201,64,47,0.08) 35%,transparent 65%);
+    filter:blur(20px);
+    animation:breathe 9s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.12);opacity:1}}
+  .hero-grid-lines{
+    position:absolute;inset:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px);
+    background-size:100% 78px;
+    -webkit-mask-image:linear-gradient(180deg,transparent,#000 40%,#000 70%,transparent);
+            mask-image:linear-gradient(180deg,transparent,#000 40%,#000 70%,transparent);
+    opacity:.5;
+  }
+  .hero-inner{position:relative;z-index:3;padding-top:80px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:12px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--accent-2);margin-bottom:26px;
+    opacity:0;animation:rise .8s ease forwards .1s;
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--accent-2)}
+  h1{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(52px,9vw,128px);
+    line-height:.92;
+    letter-spacing:-0.03em;
+    text-transform:uppercase;
+    margin-bottom:10px;
+  }
+  h1 .line{display:block;overflow:hidden}
+  h1 .line span{display:block;opacity:0;transform:translateY(105%);animation:rise .9s cubic-bezier(.16,1,.3,1) forwards}
+  h1 .line:nth-child(1) span{animation-delay:.15s}
+  h1 .line:nth-child(2) span{animation-delay:.28s}
+  h1 .accent{
+    background:linear-gradient(92deg,var(--accent),var(--accent-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-sub{
+    max-width:560px;color:var(--muted);font-size:clamp(16px,2vw,19px);
+    margin:28px 0 38px;font-weight:300;
+    opacity:0;animation:rise .9s ease forwards .55s;
+  }
+  .hero-sub strong{color:var(--ink);font-weight:500}
+  .hero-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;opacity:0;animation:rise .9s ease forwards .7s}
+  .btn{
+    font-family:var(--display);font-weight:600;font-size:14px;
+    letter-spacing:.06em;text-transform:uppercase;
+    padding:17px 34px;border-radius:2px;border:none;cursor:pointer;
+    text-decoration:none;display:inline-flex;align-items:center;gap:10px;
+    transition:transform .25s,box-shadow .25s,background .25s;
+  }
+  .btn-primary{
+    background:linear-gradient(92deg,var(--accent),var(--accent-2));
+    color:#fff;box-shadow:0 10px 40px -8px var(--glow);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 50px -6px var(--glow)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink);background:rgba(255,255,255,.04)}
+  .price-tag{margin-left:6px;color:var(--muted);font-size:13px;letter-spacing:.04em}
+  .price-tag b{color:var(--ink);font-size:15px}
+
+  @keyframes rise{to{opacity:1;transform:translateY(0)}}
+
+  /* scrolling marquee strip */
+  .marquee{
+    position:relative;z-index:3;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:16px 0;overflow:hidden;white-space:nowrap;background:rgba(0,0,0,.25);
+    margin-top:0;
+  }
+  .marquee-track{display:inline-flex;gap:46px;animation:scroll 26s linear infinite}
+  .marquee span{font-family:var(--display);font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+  .marquee span b{color:var(--accent-2)}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* ---------- section base ---------- */
+  section{position:relative}
+  .pad{padding:120px 0}
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+  .sec-label{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent-2);margin-bottom:18px;display:flex;gap:10px;align-items:center}
+  .sec-label::before{content:"";width:28px;height:1px;background:var(--accent-2)}
+  h2{font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,62px);line-height:1;letter-spacing:-.02em;text-transform:uppercase}
+  .lead{color:var(--muted);font-size:18px;max-width:620px;margin-top:22px}
+
+  /* ---------- statement / manifesto ---------- */
+  .manifesto{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .manifesto h2{max-width:980px}
+  .manifesto .big{font-family:var(--display);font-weight:300;font-size:clamp(26px,3.4vw,42px);line-height:1.25;letter-spacing:-.01em;max-width:1000px}
+  .manifesto .big em{font-style:normal;color:var(--accent-2)}
+
+  /* ---------- categories ---------- */
+  .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:54px}
+  .cat{background:var(--bg);padding:40px 28px;position:relative;overflow:hidden;transition:background .4s}
+  .cat:hover{background:var(--bg-2)}
+  .cat .n{font-family:var(--display);font-size:13px;color:var(--muted)}
+  .cat h3{font-family:var(--display);font-weight:700;font-size:26px;text-transform:uppercase;margin:14px 0 8px;letter-spacing:-.01em}
+  .cat p{color:var(--muted);font-size:14px}
+  .cat .bar{position:absolute;left:0;bottom:0;height:3px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .5s}
+  .cat:hover .bar{width:100%}
+  @media(max-width:900px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.cat-grid{grid-template-columns:1fr}}
+
+  /* ---------- audio player block ---------- */
+  .player{background:linear-gradient(160deg,#120a09,#08060a);border:1px solid var(--line);border-radius:6px;padding:36px;margin-top:54px}
+  .player-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;flex-wrap:wrap;gap:16px}
+  .player-top .tname{font-family:var(--display);font-weight:700;font-size:20px;text-transform:uppercase;letter-spacing:.01em}
+  .player-top .ttag{font-size:12px;color:var(--accent-2);letter-spacing:.14em;text-transform:uppercase}
+  .tracks{display:flex;flex-direction:column;gap:2px}
+  .track{display:grid;grid-template-columns:46px 1fr auto;align-items:center;gap:18px;padding:14px 16px;border-radius:4px;cursor:pointer;transition:background .25s}
+  .track:hover{background:rgba(255,255,255,.04)}
+  .track.active{background:rgba(201,64,47,.1)}
+  .play-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;transition:.25s}
+  .track:hover .play-btn,.track.active .play-btn{border-color:var(--accent);background:var(--accent)}
+  .play-btn svg{width:14px;height:14px;fill:var(--ink)}
+  .track.active .play-btn svg,.track:hover .play-btn svg{fill:#fff}
+  .track-meta .tt{font-weight:500;font-size:15px;color:var(--ink)}
+  .track-meta .ts{font-size:12px;color:var(--muted)}
+  .wave{display:flex;align-items:flex-end;gap:2px;height:30px}
+  .wave i{width:2px;background:var(--muted);opacity:.4;border-radius:2px}
+  .track.active .wave i{background:var(--accent-2);opacity:1;animation:eq .8s ease-in-out infinite alternate}
+  .track.active .wave i:nth-child(2n){animation-delay:.15s}
+  .track.active .wave i:nth-child(3n){animation-delay:.3s}
+  @keyframes eq{from{transform:scaleY(.3)}to{transform:scaleY(1)}}
+  .dur{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+  /* ---------- feature split ---------- */
+  .split{display:grid;grid-template-columns:1.05fr 1fr;gap:80px;align-items:center}
+  .split.rev{direction:rtl}.split.rev>*{direction:ltr}
+  .visual{position:relative;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 120% at 30% 20%,#26110d,#0a0608)}
+  .visual .ring{position:absolute;border:1px solid rgba(255,255,255,.07);border-radius:50%}
+  .visual .ring.r1{inset:14%}.visual .ring.r2{inset:26%;border-color:rgba(201,64,47,.25)}.visual .ring.r3{inset:38%}
+  .visual .core{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  .visual .core .dot{width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,var(--accent-2),var(--accent));box-shadow:0 0 80px var(--glow);animation:breathe 6s ease-in-out infinite}
+  .feat-list{list-style:none;margin-top:30px;display:flex;flex-direction:column;gap:20px}
+  .feat-list li{display:flex;gap:16px;align-items:flex-start}
+  .feat-list .mk{font-family:var(--display);color:var(--accent-2);font-weight:700;font-size:14px;min-width:34px}
+  .feat-list .ft b{display:block;color:var(--ink);font-weight:500;margin-bottom:3px}
+  .feat-list .ft span{color:var(--muted);font-size:15px}
+  @media(max-width:880px){.split{grid-template-columns:1fr;gap:46px}.split.rev{direction:ltr}}
+
+  /* ---------- stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}
+  .stat{background:var(--bg);padding:54px 24px;text-align:center}
+  .stat .num{font-family:var(--display);font-weight:900;font-size:clamp(40px,5vw,64px);background:linear-gradient(92deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+  .stat .lab{margin-top:10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- spec strip ---------- */
+  .specs{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:50px}
+  .spec{border-top:1px solid var(--line);padding-top:22px}
+  .spec h4{font-family:var(--display);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+  .spec p{color:var(--muted);font-size:14px}
+  @media(max-width:760px){.specs{grid-template-columns:1fr;gap:28px}}
+
+  /* ---------- requirement note ---------- */
+  .req{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:40px;padding:10px 20px;font-size:13px;color:var(--muted);margin-top:40px}
+  .req b{color:var(--ink);font-weight:500}
+  .req .pill{width:8px;height:8px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 12px var(--accent-2)}
+
+  /* ---------- final CTA ---------- */
+  .final{position:relative;overflow:hidden;text-align:center;background:radial-gradient(100% 120% at 50% 0%,#1d0e0a,#050507 60%);border-top:1px solid var(--line)}
+  .final .orb{position:absolute;width:700px;height:700px;left:50%;top:-260px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 60%);filter:blur(30px);animation:breathe 8s ease-in-out infinite}
+  .final-inner{position:relative;z-index:2}
+  .final h2{font-size:clamp(40px,7vw,96px)}
+  .final .price{font-family:var(--display);margin:30px 0 10px;font-size:22px}
+  .final .price s{color:var(--muted);font-weight:400;margin-right:14px}
+  .final .price b{color:var(--ink);font-weight:800;font-size:30px}
+  .final .price .save{color:var(--accent-2);font-size:14px;letter-spacing:.1em;text-transform:uppercase;margin-left:14px}
+  .guarantee{margin-top:26px;color:var(--muted);font-size:13px;letter-spacing:.06em}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:50px 0 40px;background:var(--bg)}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px}
+  .foot img{height:16px;opacity:.8}
+  .foot .fl{display:flex;gap:26px}
+  .foot a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:.04em}
+  .foot a:hover{color:var(--ink)}
+  .foot .cp{color:var(--muted);font-size:12px;width:100%;border-top:1px solid var(--line);padding-top:24px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="https://noisr.com">
+    <img src="https://cdn.shopify.com/s/files/1/0594/2375/2290/files/NOISR_Branding_NOISR_White_2478b691-ec8a-4153-8490-054de9aacb62.png?v=1776898212" alt="NOISR">
+  </a>
+  <div class="navlinks">
+    <a href="#sound">The Sound</a>
+    <a href="#listen">Listen</a>
+    <a href="#inside">What's Inside</a>
+    <a href="#specs">Specs</a>
+    <a href="#get" class="nav-cta">Get Hybrid</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-orb"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">NOISR · Serum 2 Exclusive</span>
+    <h1>
+      <span class="line"><span>Hybrid</span></span>
+      <span class="line"><span class="accent">Dark&nbsp;Electronic</span></span>
+    </h1>
+    <p class="hero-sub">
+      <strong>500 cinematic presets for Serum 2</strong> — modeled with real live instruments.
+      Basses, strings, plucks, pads, live bass and live guitar, rebuilt as playable synth engines.
+      The depth of a sample library. The control of a synth.
+    </p>
+    <div class="hero-actions">
+      <a href="#get" class="btn btn-primary">Get Hybrid
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      </a>
+      <a href="#listen" class="btn btn-ghost">Hear it</a>
+      <span class="price-tag">from <b>$79</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>500 Presets</span><span><b>Modeled From Live Instruments</b></span><span>Serum 2 Only</span>
+    <span>Basses · Strings · Plucks · Pads</span><span><b>Live Bass · Live Guitar</b></span><span>Cinematic Depth</span>
+    <span>Available Only On noisr.com</span>
+    <span>500 Presets</span><span><b>Modeled From Live Instruments</b></span><span>Serum 2 Only</span>
+    <span>Basses · Strings · Plucks · Pads</span><span><b>Live Bass · Live Guitar</b></span><span>Cinematic Depth</span>
+    <span>Available Only On noisr.com</span>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<section class="manifesto pad">
+  <div class="wrap reveal">
+    <div class="sec-label">A New Era of Sound Design</div>
+    <p class="big">
+      For years, cinematic depth lived inside <em>Kontakt libraries</em> — gigabytes of samples, locked away from real synthesis.
+      Hybrid changes that. We captured <em>live players</em>, then rebuilt every nuance inside Serum 2.
+      <em>It's never been done before.</em>
+    </p>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="sound" class="pad">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-label">Six Sound Worlds</div>
+      <h2>The Palette</h2>
+      <p class="lead">Every preset is a hybrid — organic source material fused with Serum 2's wavetable engine, macro-mapped and performance-ready out of the box.</p>
+    </div>
+    <div class="cat-grid reveal">
+      <div class="cat"><div class="n">01</div><h3>Basses</h3><p>Sub-weight and analog grit with cinematic movement.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">02</div><h3>Strings</h3><p>Recorded ensembles reshaped into evolving synth textures.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">03</div><h3>Plucks</h3><p>Percussive, articulate, dripping with character.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">04</div><h3>Pads</h3><p>Vast, breathing atmospheres for the darkest scenes.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">05</div><h3>Live Bass</h3><p>Real bass guitar, modeled and macro-controlled.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">06</div><h3>Live Guitar</h3><p>Captured guitar tones bent into hybrid instruments.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">+</div><h3>Hybrids</h3><p>Layered crossovers that blur synth and acoustic.</p><div class="bar"></div></div>
+      <div class="cat"><div class="n">∞</div><h3>Macros</h3><p>Four mapped knobs per preset for instant motion.</p><div class="bar"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LISTEN / PLAYER -->
+<section id="listen" class="pad" style="background:var(--bg-2);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="sec-label">Hear It In Context</div>
+      <h2>Listen</h2>
+      <p class="lead">Raw presets, no processing tricks. This is what 500 live-modeled sounds inside Serum 2 actually feels like.</p>
+    </div>
+    <div class="player reveal">
+      <div class="player-top">
+        <div>
+          <div class="tname">Hybrid — Demo Reel</div>
+          <div class="ttag">All sounds from the pack</div>
+        </div>
+        <div class="ttag" style="color:var(--muted)">Serum 2 · 500 Presets</div>
+      </div>
+      <div class="tracks" id="tracks">
+        <!-- tracks injected by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE SPLIT 1 -->
+<section id="inside" class="pad">
+  <div class="wrap">
+    <div class="split">
+      <div class="visual reveal">
+        <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+        <div class="core"><div class="dot"></div></div>
+      </div>
+      <div class="reveal">
+        <div class="sec-label">Built Differently</div>
+        <h2>Live Source.<br>Synth Control.</h2>
+        <ul class="feat-list">
+          <li><span class="mk">01</span><div class="ft"><b>Real instruments at the core</b><span>We tracked live bass, guitar and strings, then folded that DNA into Serum 2 wavetables — so presets breathe like recordings, not patches.</span></div></li>
+          <li><span class="mk">02</span><div class="ft"><b>Macro-mapped & performance ready</b><span>Every preset ships with four expressive macros, so you can morph from intimate to enormous without leaving the keys.</span></div></li>
+          <li><span class="mk">03</span><div class="ft"><b>Cinematic, dark, intentional</b><span>Tuned for trailers, film, dark electronic, hybrid scoring and modern bass music.</span></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="reveal">
+  <div class="stats">
+    <div class="stat"><div class="num">500</div><div class="lab">Presets</div></div>
+    <div class="stat"><div class="num">6</div><div class="lab">Sound Categories</div></div>
+    <div class="stat"><div class="num">100%</div><div class="lab">Live-Modeled</div></div>
+    <div class="stat"><div class="num">1</div><div class="lab">Serum 2 Only</div></div>
+  </div>
+</section>
+
+<!-- FEATURE SPLIT 2 -->
+<section class="pad">
+  <div class="wrap">
+    <div class="split rev">
+      <div class="visual reveal" style="background:radial-gradient(120% 120% at 70% 30%,#1a0d0a,#08060a)">
+        <div class="ring r1" style="border-color:rgba(255,106,61,.2)"></div><div class="ring r2"></div><div class="ring r3" style="border-color:rgba(201,64,47,.3)"></div>
+        <div class="core"><div class="dot" style="background:radial-gradient(circle,#ff8a5c,var(--accent))"></div></div>
+      </div>
+      <div class="reveal">
+        <div class="sec-label">Why It Matters</div>
+        <h2>Kontakt Depth,<br>Without Kontakt.</h2>
+        <p class="lead" style="margin-top:14px">No multi-gigabyte sample streaming. No extra host. Just Serum 2 — the synth you already trust — now capable of the organic, cinematic weight that used to require a sampler.</p>
+        <div class="req"><span class="pill"></span>Requires <b>Serum 2</b> · macOS &amp; Windows · ~120MB install</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section id="specs" class="pad" style="background:var(--bg-2);border-block:1px solid var(--line)">
+  <div class="wrap reveal">
+    <div class="sec-label">Technical</div>
+    <h2>Specs</h2>
+    <div class="specs">
+      <div class="spec"><h4>Format</h4><p>500 Serum 2 preset files (.serumpreset2) with embedded wavetables. No external samples to manage.</p></div>
+      <div class="spec"><h4>Compatibility</h4><p>Xfer Serum 2 only. Works in any DAW that hosts Serum 2 on macOS or Windows.</p></div>
+      <div class="spec"><h4>Categories</h4><p>Basses, Strings, Plucks, Pads, Live Bass, Live Guitar — fully tagged and browsable.</p></div>
+      <div class="spec"><h4>Delivery</h4><p>Instant download after purchase. Lifetime access from your noisr.com account.</p></div>
+      <div class="spec"><h4>License</h4><p>Royalty-free for your music productions. Presets may not be resold or redistributed.</p></div>
+      <div class="spec"><h4>Exclusive</h4><p>Available only on noisr.com. Not sold on any third-party marketplace.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="get" class="final pad">
+  <div class="orb"></div>
+  <div class="wrap final-inner reveal">
+    <div class="sec-label" style="justify-content:center">Limited Launch Pricing</div>
+    <h2>Own The<br>New Era</h2>
+    <div class="price"><s>$129</s><b>$79</b><span class="save">Save 40% · Launch</span></div>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:18px">
+      <a href="https://noisr.com" class="btn btn-primary">Add To Cart
+        <svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+      </a>
+      <a href="#listen" class="btn btn-ghost">Hear It First</a>
+    </div>
+    <div class="guarantee">Instant download · Lifetime access · Serum 2 required</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot">
+    <img src="https://cdn.shopify.com/s/files/1/0594/2375/2290/files/NOISR_Branding_NOISR_White_2478b691-ec8a-4153-8490-054de9aacb62.png?v=1776898212" alt="NOISR">
+    <div class="fl">
+      <a href="https://noisr.com">Store</a>
+      <a href="#sound">The Sound</a>
+      <a href="#specs">Specs</a>
+      <a href="https://noisr.com">Support</a>
+    </div>
+    <div class="cp">© 2026 NOISR. Hybrid — Dark Electronic Presets. Serum 2 is a trademark of Xfer Records. NOISR is not affiliated with Xfer Records.</div>
+  </div>
+</footer>
+
+<script>
+  // nav solidify on scroll
+  const nav=document.getElementById('nav');
+  addEventListener('scroll',()=>{nav.classList.toggle('solid',scrollY>40)});
+
+  // scroll reveal
+  const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // player tracks
+  const trackData=[
+    {t:'Obsidian Pad',s:'Pads · Live Strings',d:'0:42'},
+    {t:'Tracking Bass',s:'Live Bass · Sub',d:'0:38'},
+    {t:'Ember Pluck',s:'Plucks · Hybrid',d:'0:29'},
+    {t:'Cathedral Strings',s:'Strings · Cinematic',d:'0:51'},
+    {t:'Drift Guitar',s:'Live Guitar · Texture',d:'0:46'},
+  ];
+  const wrapTracks=document.getElementById('tracks');
+  trackData.forEach((tr,i)=>{
+    const bars=Array.from({length:34},()=>`<i style="height:${20+Math.random()*80}%"></i>`).join('');
+    const el=document.createElement('div');
+    el.className='track'+(i===0?' active':'');
+    el.innerHTML=`
+      <div class="play-btn">
+        <svg viewBox="0 0 24 24"><path d="M7 5v14l12-7z"/></svg>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="track-meta"><span class="tt">${tr.t}</span> <span class="ts">— ${tr.s}</span></div>
+        <div class="wave">${bars}</div>
+      </div>
+      <span class="dur">${tr.d}</span>`;
+    el.addEventListener('click',()=>{
+      document.querySelectorAll('.track').forEach(t=>t.classList.remove('active'));
+      el.classList.add('active');
+    });
+    wrapTracks.appendChild(el);
+  });
+</script>
+</body>
+</html>
